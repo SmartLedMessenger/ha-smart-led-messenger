@@ -44,11 +44,23 @@ n'apparaît pas dans votre menu latéral, commencez par
 7. **Redémarrez Home Assistant** — Paramètres → Système → bouton
    **Redémarrer**. Sans ce redémarrage, l'intégration reste invisible.
 
+### Mettre à jour
+
+Installée par HACS, l'intégration signale elle-même ses nouvelles versions :
+la fiche affiche une mise à jour disponible, vous téléchargez, vous redémarrez
+Home Assistant. Vos réglages sont conservés.
+
+Si la nouvelle version n'apparaît pas encore, HACS ne l'a pas vue : menu
+**⋮ → Recharger les données**, ou redémarrez Home Assistant.
+
 ### À la main
 
 Copiez le dossier `custom_components/smart_led_messenger/` — **le dossier
 lui-même**, pas son contenu en vrac — dans le dossier `custom_components/` de
 votre configuration Home Assistant, puis redémarrez.
+
+Installée ainsi, l'intégration ne se met pas à jour : il faut recopier le
+dossier à chaque version.
 
 Le chemin obtenu doit être exactement :
 
