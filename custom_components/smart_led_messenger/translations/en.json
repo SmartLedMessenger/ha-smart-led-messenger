@@ -1,0 +1,61 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Smart Led Messenger",
+        "description": "The key is the one from your personal link, shown in your customer area under \"Your personal URL\": the value of the key parameter, copied exactly as it appears (including any %2B and %3D).",
+        "data": {
+          "cle": "Key",
+          "url_base": "Service address"
+        }
+      }
+    },
+    "error": {
+      "cle_invalide": "The server rejected this key. Copy it again from your customer area, without adding or removing anything.",
+      "injoignable": "The server did not answer. Check your internet access, then try again."
+    },
+    "abort": {
+      "already_configured": "This account is already configured."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Tracked events",
+        "description": "The entities you pick are announced on the display when their state changes: \"Gate open\", \"Living room light on\". The display has a single line, so tracking three or four beats tracking thirty.",
+        "data": {
+          "entites": "Tracked entities",
+          "duree": "Display duration (minutes)",
+          "intervalle_min": "Minimum delay between two pushes from the same entity (seconds)",
+          "gabarits": "Custom wording"
+        },
+        "data_description": {
+          "duree": "After that, the event disappears on its own.",
+          "intervalle_min": "Guards against a bouncing contact or a chatty sensor.",
+          "gabarits": "One line per entity, as \"entity_id: text\". Available fields: {nom}, {etat}, {unite}. Example: binary_sensor.gate: The gate just moved"
+        }
+      }
+    }
+  },
+  "services": {
+    "envoyer_evenement": {
+      "name": "Send an event",
+      "description": "Scrolls a text on the display for a few minutes, then lets it disappear.",
+      "fields": {
+        "texte": { "name": "Text", "description": "The text to scroll." },
+        "duree": { "name": "Duration", "description": "Display duration in minutes." }
+      }
+    },
+    "envoyer_message": {
+      "name": "Send a permanent message",
+      "description": "Replaces the account's personal message and forces it on.",
+      "fields": {
+        "texte": { "name": "Text", "description": "The text to scroll. Empty clears the message." }
+      }
+    },
+    "effacer": {
+      "name": "Clear the current event",
+      "description": "Removes the displayed event immediately, without waiting for it to expire."
+    }
+  }
+}

@@ -1,0 +1,42 @@
+envoyer_evenement:
+  name: Envoyer un événement
+  description: >-
+    Fait défiler un texte sur le bandeau pendant quelques minutes, puis le
+    laisse disparaître. Ne touche pas au message personnel du compte.
+  fields:
+    texte:
+      name: Texte
+      description: Le texte à faire défiler. Les modèles Jinja sont évalués par Home Assistant.
+      required: true
+      example: Le portail vient de s'ouvrir
+      selector:
+        text:
+    duree:
+      name: Durée
+      description: Durée d'affichage en minutes. Par défaut 5, au maximum 120.
+      required: false
+      example: 5
+      selector:
+        number:
+          min: 1
+          max: 120
+          unit_of_measurement: min
+
+envoyer_message:
+  name: Envoyer un message permanent
+  description: >-
+    Remplace le message personnel du compte et force son affichage. Il reste
+    jusqu'au prochain envoi : pour un événement, préférer « Envoyer un
+    événement ».
+  fields:
+    texte:
+      name: Texte
+      description: Le texte à faire défiler. Un texte vide efface le message.
+      required: true
+      example: Bienvenue à la maison
+      selector:
+        text:
+
+effacer:
+  name: Effacer l'événement en cours
+  description: Retire immédiatement l'événement affiché, sans attendre sa péremption.

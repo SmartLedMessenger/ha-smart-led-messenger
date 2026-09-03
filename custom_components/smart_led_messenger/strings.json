@@ -1,0 +1,61 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Smart Led Messenger",
+        "description": "La clé est celle de votre lien personnel, dans votre espace client, encadré « Votre URL personnelle » : la valeur du paramètre key, recopiée à l'identique (les %2B et %3D compris).",
+        "data": {
+          "cle": "Clé",
+          "url_base": "Adresse du service"
+        }
+      }
+    },
+    "error": {
+      "cle_invalide": "Le serveur refuse cette clé. Recopiez-la depuis votre espace client, sans rien retirer ni ajouter.",
+      "injoignable": "Le serveur n'a pas répondu. Vérifiez l'accès à Internet, puis réessayez."
+    },
+    "abort": {
+      "already_configured": "Ce compte est déjà configuré."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Événements suivis",
+        "description": "Les entités choisies s'annoncent sur le bandeau quand leur état change : « Portail ouvert », « Lumière salon allumée ». L'afficheur n'a qu'une ligne — en suivre trois ou quatre vaut mieux que trente.",
+        "data": {
+          "entites": "Entités suivies",
+          "duree": "Durée d'affichage (minutes)",
+          "intervalle_min": "Intervalle minimal entre deux envois d'une même entité (secondes)",
+          "gabarits": "Formulations personnalisées"
+        },
+        "data_description": {
+          "duree": "Au-delà, l'événement disparaît de lui-même.",
+          "intervalle_min": "Protège d'un contact qui rebondit ou d'un capteur bavard.",
+          "gabarits": "Une ligne par entité, sous la forme « entity_id: texte ». Champs disponibles : {nom}, {etat}, {unite}. Exemple : binary_sensor.portail: Le portail vient de bouger"
+        }
+      }
+    }
+  },
+  "services": {
+    "envoyer_evenement": {
+      "name": "Envoyer un événement",
+      "description": "Fait défiler un texte sur le bandeau pendant quelques minutes, puis le laisse disparaître.",
+      "fields": {
+        "texte": { "name": "Texte", "description": "Le texte à faire défiler." },
+        "duree": { "name": "Durée", "description": "Durée d'affichage en minutes." }
+      }
+    },
+    "envoyer_message": {
+      "name": "Envoyer un message permanent",
+      "description": "Remplace le message personnel du compte et force son affichage.",
+      "fields": {
+        "texte": { "name": "Texte", "description": "Le texte à faire défiler. Vide, il efface le message." }
+      }
+    },
+    "effacer": {
+      "name": "Effacer l'événement en cours",
+      "description": "Retire immédiatement l'événement affiché, sans attendre sa péremption."
+    }
+  }
+}
