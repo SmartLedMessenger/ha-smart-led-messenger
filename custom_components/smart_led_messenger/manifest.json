@@ -1,7 +1,7 @@
 {
   "domain": "smart_led_messenger",
   "name": "Smart Led Messenger",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "integration_type": "service",
   "iot_class": "cloud_push",
   "config_flow": true,

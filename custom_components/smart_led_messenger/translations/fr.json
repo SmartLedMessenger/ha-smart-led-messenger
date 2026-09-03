@@ -7,12 +7,17 @@
         "data": {
           "cle": "Clé",
           "url_base": "Adresse du service"
+        },
+        "data_description": {
+          "cle": "Vous pouvez coller la clé telle qu'elle apparaît dans l'URL, ou l'URL personnelle entière : les deux sont acceptées.",
+          "url_base": "À ne changer que pour viser une autre installation que le service public."
         }
       }
     },
     "error": {
       "cle_invalide": "Le serveur refuse cette clé. Recopiez-la depuis votre espace client, sans rien retirer ni ajouter.",
-      "injoignable": "Le serveur n'a pas répondu. Vérifiez l'accès à Internet, puis réessayez."
+      "injoignable": "Le serveur n'a pas répondu. Vérifiez l'accès à Internet, puis réessayez.",
+      "serveur_sans_evenements": "Ce serveur ne gère pas encore les événements : il a ignoré la demande. Votre clé est bonne. Attendez la mise à jour du service, ou corrigez l'adresse du service si vous visez une installation particulière."
     },
     "abort": {
       "already_configured": "Ce compte est déjà configuré."

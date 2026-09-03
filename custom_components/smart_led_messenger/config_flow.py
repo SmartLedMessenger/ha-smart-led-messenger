@@ -30,7 +30,13 @@ from homeassistant.helpers.selector import (
     TextSelectorType,
 )
 
-from .api import ClientSmartLedMessenger, CleInvalide, ServeurInjoignable
+from .api import (
+    ClientSmartLedMessenger,
+    CleInvalide,
+    ServeurInjoignable,
+    ServeurSansEvenements,
+)
+from .cle import normaliser_cle
 from .const import (
     CONF_CLE,
     CONF_DUREE,
@@ -95,6 +101,8 @@ async def _verifier(hass, cle: str, url_base: str) -> str | None:
         await client.verifier()
     except CleInvalide:
         return "cle_invalide"
+    except ServeurSansEvenements:
+        return "serveur_sans_evenements"
     except ServeurInjoignable as erreur:
         _LOGGER.debug("Vérification impossible : %s", erreur)
         return "injoignable"
@@ -112,7 +120,9 @@ class FluxConfiguration(ConfigFlow, domain=DOMAIN):
         erreurs: dict[str, str] = {}
 
         if user_input is not None:
-            cle = user_input[CONF_CLE].strip()
+            # Normalisee des l'entree : sinon la meme cle collee sous ses
+            # deux formes creerait deux entrees pour un seul afficheur.
+            cle = normaliser_cle(user_input[CONF_CLE])
             url_base = user_input.get(CONF_URL_BASE, URL_BASE_PAR_DEFAUT).strip()
 
             # La cle EST le compte : deux entrees pour la meme cle ecriraient

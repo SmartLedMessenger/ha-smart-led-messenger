@@ -64,16 +64,26 @@ Si `custom_components` n'existe pas, créez-le à côté de
 Messenger.**
 
 La **clé** demandée est celle de votre lien personnel : espace client, encadré
-« Votre URL personnelle », la valeur du paramètre `key`. Recopiez-la telle
-quelle, `%2B` et `%3D` compris.
+« Votre URL personnelle », la valeur du paramètre `key`.
 
-Elle est éprouvée à la saisie. Deux limites, dites franchement :
+Trois formes sont acceptées, parce que ce sont celles qu'on a sous la main : la
+clé telle qu'elle apparaît dans l'URL (avec ses `%2B` et `%3D`), la clé déjà
+décodée, ou **l'URL personnelle entière** collée sans réfléchir.
 
-- ce que la vérification prouve, c'est que le serveur répond et sait déchiffrer
-  la clé ;
-- elle ne prouve pas que le compte existe. `push.ashx` répond `OK` à une clé
+Elle est éprouvée à la saisie, par une requête qui **n'écrit rien** : on
+demande volontairement un emplacement inexistant, que le serveur refuse après
+avoir vérifié la clé. Le bandeau n'est pas touché.
+
+Deux limites, dites franchement :
+
+- la vérification prouve que le serveur répond, qu'il sait déchiffrer la clé,
+  et qu'il gère les événements ;
+- elle ne prouve pas que le compte existe : `push.ashx` répond `OK` à une clé
   bien formée mais inconnue. Après la configuration, regardez le bandeau une
   fois.
+
+Si le formulaire répond que **le serveur ne gère pas encore les événements**,
+la clé est bonne : c'est le service qui n'est pas à jour.
 
 Ensuite, **Configurer** ouvre les options :
 

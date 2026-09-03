@@ -7,12 +7,17 @@
         "data": {
           "cle": "Key",
           "url_base": "Service address"
+        },
+        "data_description": {
+          "cle": "You can paste the key as it appears in the URL, or the whole personal URL: both are accepted.",
+          "url_base": "Change this only to point at an installation other than the public service."
         }
       }
     },
     "error": {
       "cle_invalide": "The server rejected this key. Copy it again from your customer area, without adding or removing anything.",
-      "injoignable": "The server did not answer. Check your internet access, then try again."
+      "injoignable": "The server did not answer. Check your internet access, then try again.",
+      "serveur_sans_evenements": "This server does not handle events yet: it ignored the request. Your key is fine. Wait for the service to be updated, or fix the service address if you are pointing at a specific installation."
     },
     "abort": {
       "already_configured": "This account is already configured."

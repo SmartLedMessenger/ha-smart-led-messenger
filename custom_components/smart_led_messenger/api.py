@@ -26,15 +26,32 @@ import logging
 
 import aiohttp
 
+from .cle import normaliser_cle
+
 _LOGGER = logging.getLogger(__name__)
 
 DELAI_MAX = 15
 
 REPONSE_CLE_INVALIDE = "Clé invalide"
+REPONSE_SLOT_INCONNU = "Slot inconnu"
+
+# Slot volontairement inexistant, utilise comme sonde : sur un serveur a jour,
+# il est refuse AVANT toute ecriture (cf. push.ashx), ce qui valide la cle sans
+# rien changer au bandeau.
+SLOT_SONDE = "verification"
 
 
 class CleInvalide(Exception):
     """La cle n'a pas pu etre dechiffree par le serveur."""
+
+
+class ServeurSansEvenements(Exception):
+    """Le serveur repond, mais ignore le parametre slot.
+
+    Autrement dit : il est anterieur au §3.21. L'integration ne peut pas y
+    fonctionner — chaque evenement irait ecraser le message personnel du
+    client, ce que l'emplacement dedie existe justement pour eviter.
+    """
 
 
 class ServeurInjoignable(Exception):
@@ -47,7 +64,9 @@ class ClientSmartLedMessenger:
     def __init__(self, session: aiohttp.ClientSession, url_base: str, cle: str) -> None:
         self._session = session
         self._url_base = url_base.rstrip("/")
-        self._cle = cle
+        # aiohttp encode ce qu'on lui donne : la cle doit partir DECODEE, sans
+        # quoi le %2B de l'espace client arrive en %252B (cf. cle.py).
+        self._cle = normaliser_cle(cle)
 
     async def envoyer_evenement(self, texte: str, duree: int) -> None:
         """Pose l'evenement ephemere. Texte vide : l'efface."""
@@ -67,20 +86,28 @@ class ClientSmartLedMessenger:
         await self._push({"message": texte})
 
     async def verifier(self) -> None:
-        """Eprouve la cle depuis le formulaire de configuration.
+        """Eprouve la cle ET le serveur, depuis le formulaire de configuration.
 
-        La sonde est un EFFACEMENT d'evenement : c'est la seule ecriture
-        totalement inoffensive de la route — elle ne touche ni au message
-        personnel, ni a l'interrupteur, et vide un emplacement dont
-        l'integration est de toute facon la seule a se servir.
+        La sonde est un SLOT INEXISTANT, et c'est ce qui la rend sans effet :
+        un serveur a jour verifie la cle, refuse le slot, et n'ecrit rien du
+        tout. Le bandeau du client n'est pas touche, meme pas son emplacement
+        evenement.
 
-        Leve CleInvalide si le serveur refuse la cle, ServeurInjoignable s'il
-        ne repond pas. Ne peut pas garantir que le compte existe (cf. l'en-tete
-        du module).
+        En prime, la reponse dit si le serveur connait les evenements — un
+        « OK » signifie qu'il a ignore le slot, donc qu'il est anterieur au
+        §3.21. Mieux vaut le dire dans le formulaire que de le decouvrir en
+        voyant son message personnel ecrase par le premier portail ouvert.
+
+        Leve CleInvalide, ServeurSansEvenements ou ServeurInjoignable.
         """
-        await self.effacer_evenement()
+        reponse = await self._push({"slot": SLOT_SONDE})
+        if reponse == "OK":
+            raise ServeurSansEvenements(
+                "Le serveur a ignoré le paramètre slot : il ne gère pas encore les événements."
+            )
 
-    async def _push(self, parametres: dict[str, str]) -> None:
+    async def _push(self, parametres: dict[str, str]) -> str:
+        """Appelle la route et rend le corps de la reponse, deja controle."""
         url = f"{self._url_base}/push.ashx"
         params = {"key": self._cle, **parametres}
 
@@ -98,8 +125,10 @@ class ClientSmartLedMessenger:
         if corps.startswith(REPONSE_CLE_INVALIDE):
             raise CleInvalide(corps)
 
-        if corps != "OK":
-            # « Slot inconnu », ou toute reponse future qu'on ne connait pas :
-            # tracer plutot que lever, l'evenement n'est pas assez important
-            # pour faire echouer quoi que ce soit dans Home Assistant.
+        if corps != "OK" and not corps.startswith(REPONSE_SLOT_INCONNU):
+            # Toute reponse future qu'on ne connait pas : tracer plutot que
+            # lever, un evenement n'est pas assez important pour faire echouer
+            # quoi que ce soit dans Home Assistant.
             _LOGGER.warning("Réponse inattendue de %s : %s", url, corps)
+
+        return corps
