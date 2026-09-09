@@ -1,13 +1,13 @@
 {
   "domain": "smart_led_messenger",
   "name": "Smart Led Messenger",
-  "version": "0.1.1",
+  "codeowners": ["@SmartLedMessenger"],
+  "config_flow": true,
+  "dependencies": [],
+  "documentation": "https://www.smartledmessenger.com/domotique.html",
   "integration_type": "service",
   "iot_class": "cloud_push",
-  "config_flow": true,
-  "codeowners": ["@SmartLedMessenger"],
-  "dependencies": [],
+  "issue_tracker": "https://github.com/SmartLedMessenger/ha-smart-led-messenger/issues",
   "requirements": [],
-  "documentation": "https://www.smartledmessenger.com/domotique.html",
-  "issue_tracker": "https://github.com/SmartLedMessenger/ha-smart-led-messenger/issues"
+  "version": "0.1.1"
 }
